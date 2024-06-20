@@ -9,11 +9,16 @@ namespace Entities.Models.Entities
         private string name;
         private string description;
         private decimal price;
+        private int quantity;
         private int categoryId;
         private Category category;
-        private int brandId; // Nova chave estrangeira
-        private Brand brand; // Nova propriedade de navegação
+        private int subcategoryId;
+        private Subcategory subcategory;
+        private int brandId;
+        private Brand brand; 
         private string imageUrl;
+        private int reviewsCount;
+        private double rating;
 
         [Key]
         public int ProductId
@@ -28,6 +33,13 @@ namespace Entities.Models.Entities
         {
             get => name;
             set => name = value;
+        }
+
+        [Required]
+        public int Quantity
+        {
+            get => quantity;
+            set => quantity = value;
         }
 
         [StringLength(500)]
@@ -57,6 +69,19 @@ namespace Entities.Models.Entities
             set => category = value;
         }
 
+        [ForeignKey("Subcategory")]
+        public int SubcategoryId
+        {
+            get => subcategoryId;
+            set => subcategoryId = value;
+        }
+
+        public virtual Subcategory Subcategory
+        {
+            get => subcategory;
+            set => subcategory = value;
+        }
+
         [ForeignKey("Brand")]
         public int BrandId
         {
@@ -75,6 +100,18 @@ namespace Entities.Models.Entities
         {
             get => imageUrl;
             set => imageUrl = value;
+        }
+
+        public int ReviewsCount
+        {
+            get => reviewsCount;
+            set => reviewsCount = value;
+        }
+
+        public double Rating
+        {
+            get => rating;
+            set => rating = value;
         }
     }
 }

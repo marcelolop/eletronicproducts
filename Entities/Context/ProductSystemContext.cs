@@ -40,30 +40,42 @@ namespace Entities.Context
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
-                .HasForeignKey(p => p.CategoryId);
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict); // Evita a cascata de exclusão
 
             // Configurar a precisão do preço
             modelBuilder.Entity<Product>()
                .Property(p => p.Price)
                .HasPrecision(20, 5);
 
+            // Configurar a relação entre Produto e Subcategoria
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.Subcategory)
+                .WithMany()
+                .HasForeignKey(p => p.SubcategoryId)
+                .OnDelete(DeleteBehavior.Restrict); // Evita a cascata de exclusão
+
             // Configurar a relação entre Categoria e Subcategoria
             modelBuilder.Entity<Category>()
                 .HasMany(c => c.Subcategories)
                 .WithOne(s => s.Category)
-                .HasForeignKey(s => s.CategoryId);
+                .HasForeignKey(s => s.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict); // Evita a cascata de exclusão
 
             // Configurar a relação entre Subcategoria e Categoria
             modelBuilder.Entity<Subcategory>()
                 .HasOne(s => s.Category)
                 .WithMany(c => c.Subcategories)
-                .HasForeignKey(s => s.CategoryId);
+                .HasForeignKey(s => s.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict); // Evita a cascata de exclusão
 
             // Configurar a relação entre Produto e Marca
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Brand)
-                .WithMany(b => b.Products)
+                .WithMany()
                 .HasForeignKey(p => p.BrandId);
+
+            base.OnModelCreating(modelBuilder);
         }
 
         /// <summary>

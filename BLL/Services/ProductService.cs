@@ -7,9 +7,9 @@ namespace BLL.Services
     public class ProductService : IProductService
     {
         //Dependency Injection
-        private readonly IGenericCRUDRepository<Product> _productRepository;
+        private readonly IProductRepository _productRepository;
 
-        public ProductService(IGenericCRUDRepository<Product> productRepository)
+        public ProductService(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
@@ -38,6 +38,19 @@ namespace BLL.Services
                 throw new InvalidOperationException($"Couldn't get product: {ex.Message}");
             }
         }
+
+        public async Task<Product> GetProductByDetailsAsync(int categoryId, int subcategoryId,int productId)
+        {
+            try
+            {
+                return await _productRepository.GetProductByDetailsAsync(categoryId, subcategoryId, productId);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException($"Couldn't get product: {ex.Message}");
+            }
+        }
+
         public async Task<Product> AddProductAsync(Product product)
         {
             try
@@ -71,6 +84,45 @@ namespace BLL.Services
             catch (InvalidOperationException ex)
             {
                 throw new InvalidOperationException($"Couldn't delete product: {ex.Message}");
+            }
+        }
+
+        
+
+        public async Task<List<Product>> GetProductsByCategoryAsync(int categoryId)
+        {
+            try
+            {
+                return await _productRepository.GetProductsByCategoryAsync(categoryId);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException($"Couldn't get products: {ex.Message}");
+            }
+        }
+
+
+        public async Task<List<Product>> GetProductsByCategoryAndSubcategoryAsync(int categoryId, int subcategoryId)
+        {
+            try
+            {
+                return await _productRepository.GetProductsByCategoryAndSubcategoryAsync(categoryId, subcategoryId);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException($"Couldn't get products: {ex.Message}");
+            }
+        }
+
+        public async Task<List<Product>> GetProductsByBrandAsync(int brandId)
+        {
+            try
+            {
+                return await _productRepository.GetProductsByBrandAsync(brandId);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException($"Couldn't get products: {ex.Message}");
             }
         }
 

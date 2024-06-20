@@ -9,6 +9,7 @@ using Entities.Dependency_Interfaces;
 using Entities.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Microsoft.Data.SqlClient;
 
 namespace EletronicProducts
 {
@@ -43,26 +44,36 @@ namespace EletronicProducts
             //Database Configuration
             builder.Services.AddDbContext<ProductSystemContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+                    sqlServerOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(30),
+                        errorNumbersToAdd: null);
+                    });
             });
+
 
             //Dependency Injection
 
             builder.Services.AddScoped<IProductSystemContext, ProductSystemContext>();
 
-            builder.Services.AddScoped<IGenericCRUDRepository<Product>, ProductRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IGenericCRUDRepository<Category>, CategoryRepository>();
             builder.Services.AddScoped<IGenericCRUDRepository<Subcategory>, SubcategoryRepository>();
+            builder.Services.AddScoped<IGenericCRUDRepository<Brand>, BrandRepository>();
 
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
             builder.Services.AddScoped<IBrandService, BrandService>();
 
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-           
+
             app.UseSwagger();
             app.UseSwaggerUI();
 
@@ -70,6 +81,12 @@ namespace EletronicProducts
 
             app.UseAuthorization();
 
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
 
             app.MapControllers();
 

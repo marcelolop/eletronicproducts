@@ -13,6 +13,5 @@ namespace Entities.Models.DTOs.BrandDTOs
 
         public string Logo { get; set; }
 
-        public List<ProductReadDto> Products { get; set; }
     }
 }

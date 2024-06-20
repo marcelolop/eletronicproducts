@@ -79,6 +79,122 @@ namespace EletronicProducts.Controllers
         }
 
         /// <summary>
+        /// Get all products by category Id
+        /// </summary>
+        /// <param name="categoryId">Category Id</param>
+        /// <returns>Ok response with list of products</returns>
+        [HttpGet, Route("products/category/{categoryId}")]
+        public async Task<IActionResult> GetProductsByCategoryAsync(int categoryId)
+        {
+            try
+            {
+                var products = await _productService.GetProductsByCategoryAsync(categoryId);
+                if (products == null || !products.Any())
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, $"No products found for category ID: {categoryId}");
+                }
+                var productsDTO = _mapper.Map<IEnumerable<ProductReadDto>>(products);
+                return StatusCode(StatusCodes.Status200OK, productsDTO);
+            }
+            catch (SqlException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get all products by category and subcategory Id
+        /// </summary>
+        /// <param name="categoryId">Category Id</param>
+        /// <param name="subcategoryId">Subcategory Id</param>
+        /// <returns>Ok response with list of products</returns>
+        [HttpGet, Route("products/category/{categoryId}/subcategory/{subcategoryId}")]
+        public async Task<IActionResult> GetProductsByCategoryAndSubcategoryAsync(int categoryId, int subcategoryId)
+        {
+            try
+            {
+                var products = await _productService.GetProductsByCategoryAndSubcategoryAsync(categoryId, subcategoryId);
+                if (products == null || !products.Any())
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, $"No products found for category ID: {categoryId} and subcategory ID: {subcategoryId}");
+                }
+                var productsDTO = _mapper.Map<IEnumerable<ProductReadDto>>(products);
+                return StatusCode(StatusCodes.Status200OK, productsDTO);
+            }
+            catch (SqlException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get all products by brand Id
+        /// </summary>
+        /// <param name="brandId">Brand Id</param>
+        /// <returns>Ok response with list of products</returns>
+        [HttpGet, Route("products/brand/{brandId}")]
+        public async Task<IActionResult> GetProductsByBrandAsync(int brandId)
+        {
+            try
+            {
+                var products = await _productService.GetProductsByBrandAsync(brandId);
+                if (products == null || !products.Any())
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, $"No products found for brand ID: {brandId}");
+                }
+                var productsDTO = _mapper.Map<IEnumerable<ProductReadDto>>(products);
+                return StatusCode(StatusCodes.Status200OK, productsDTO);
+            }
+            catch (SqlException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Get product details by category, subcategory and product Id
+        /// </summary>
+        /// <param name="categoryId">Category Id</param>
+        /// <param name="subcategoryId">Subcategory Id</param>
+        /// <param name="productId">Product Id</param>
+        /// <returns> Ok response with product details</returns>
+        [HttpGet, Route("products/{categoryId}/{subcategoryId}/{productId}")]
+        public async Task<IActionResult> GetProductDetailsAsync(int categoryId, int subcategoryId, int productId)
+        {
+            try
+            {
+                var product = await _productService.GetProductByDetailsAsync(categoryId, subcategoryId, productId);
+                if (product == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, $"Product with Category ID: {categoryId}, Subcategory ID: {subcategoryId} and Product ID: {productId} not found");
+                }
+                var productDTO = _mapper.Map<ProductReadDto>(product);
+                return StatusCode(StatusCodes.Status200OK, productDTO);
+            }
+            catch (SqlException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Add a new product
         /// </summary>
         /// <param name="productCreateDTO"> Product data transfer object</param>

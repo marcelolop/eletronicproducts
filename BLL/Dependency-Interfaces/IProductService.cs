@@ -23,6 +23,14 @@ namespace BLL.Dependency_Interfaces
         /// <returns> Product entity</returns>
         Task<Product> GetProductByIdAsync(int id);
 
+        Task<Product> GetProductByDetailsAsync(int categoryId, int subcategoryId, int productId);
+
+        Task<List<Product>> GetProductsByBrandAsync(int brandId);
+
+        Task<List<Product>> GetProductsByCategoryAndSubcategoryAsync(int categoryId, int subcategoryId);
+
+        Task<List<Product>> GetProductsByCategoryAsync(int categoryId);
+
         /// <summary>
         /// Add product
         /// </summary>

@@ -12,7 +12,6 @@ namespace Entities.Models.Entities
         private int brandId;
         private string brandName;
         private string logo;
-        private List<Product> products;
 
         [Key]
         public int BrandId
@@ -36,10 +35,5 @@ namespace Entities.Models.Entities
             set => logo = value;
         }
 
-        public virtual List<Product> Products
-        {
-            get => products;
-            set => products = value;
-        }
     }
 }
